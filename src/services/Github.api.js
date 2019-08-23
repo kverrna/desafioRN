@@ -18,7 +18,7 @@ const getIssues = async (organization, repositorieName) => {
     const url = `${mainUrl}/${organization}/${repositorieName}/issues`;
     const response = await fetch(url);
     const json = await response.json();
-    if (response.ok) { return { success: true, ...json }; }
+    if (response.ok) { return { success: true, issues: json }; }
     return { success: false, msg: json.message };
   } catch (error) {
     return { success: false, msg: `Não foi possível baixar as issues do repositório ${repositorieName}` };
