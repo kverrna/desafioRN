@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './Cell.styles';
-import temp from '../temp';
+import { setaNavegacao } from '../temp';
 
 const Cell = ({
   urlImageAvatar, title, subtitle, onPress
@@ -18,7 +18,7 @@ const Cell = ({
       <Text style={styles.textSubtitle}>{subtitle}</Text>
     </View>
     <View style={styles.navigationIconContainer}>
-      <Image style={styles.navigationIcon} source={{ uri: temp }} />
+      <Image style={styles.navigationIcon} source={{ uri: setaNavegacao }} />
     </View>
   </TouchableOpacity>
 );

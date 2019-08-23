@@ -1,24 +1,45 @@
-import React, { useEffect } from 'react';
-import { View, SafeAreaView, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View, SafeAreaView, FlatList, Alert
+} from 'react-native';
 import Styles from './Home.styles';
 import Cell from '../../components/Cell/Cell';
-import { findRep, findIssues } from '../../services/Github.service';
+import Search from '../../components/Search/Search';
+import { getAllReps } from '../../util/Persist';
 
-const buscaDados = async () => {
-  const repositorio = await findRep('microsoft', 'vscode');
-  const issues = await findIssues('microsoft', 'vscode');
-  debugger;
-};
+
 const Home = (props) => {
-  useEffect(() => {
-    buscaDados();
+  const [listRepositories, setListRep] = useState([]);
+  useEffect(async () => {
+    getAllReps().then((list) => {
+      setListRep(list);
+    }).catch((error) => {
+      Alert.alert('Erro', error);
+    });
   }, []);
+
+  const renderFlatListItem = ({ item }) => {
+    const { avatar, organizacao, nome } = item;
+    return (
+      <Cell
+        urlImageAvatar={avatar}
+        title={organizacao}
+        subtitle={nome}
+        onPress={() => props.navigation.navigate('Detail')}
+      />
+    );
+  };
+
+  const flatListKeyExtractor = (item) => toString(item.id);
+  const renderFlatList = (repList) => (
+    <FlatList data={repList} renderItem={renderFlatListItem} keyExtractor={flatListKeyExtractor} />
+  );
 
   return (
     <SafeAreaView style={Styles.safeArea}>
+      <Search />
       <View style={Styles.mainContainer}>
-        {/* <Cell urlImageAvatar={organizationGit.avatarUrl} title={organizationGit.login} subtitle={organizationGit.repoName} onPress={() => props.navigation.navigate('Detail', { titulo: 'foi' })} /> */}
-        {/* <Button title="navegar " onPress={() => props.navigation.navigate('Detail', { titulo: organizationGit.repoName })} /> */}
+        {renderFlatList(listRepositories, () => props.navigation.navigate('Detail'))}
       </View>
     </SafeAreaView>
   );
