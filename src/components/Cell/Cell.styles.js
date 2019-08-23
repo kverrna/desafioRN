@@ -19,7 +19,13 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     marginLeft: 10,
-
+  },
+  avatarRound: {
+    backgroundColor: 'transparent',
+    height: 60,
+    width: 60,
+    marginLeft: 10,
+    borderRadius: 50
   },
   containerText: {
     alignItems: 'flex-start',

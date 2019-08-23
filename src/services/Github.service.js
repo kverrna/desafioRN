@@ -1,7 +1,7 @@
 import {
   Alert
 } from 'react-native';
-import { getRepositories, getIssues } from './Github.api';
+import { getRepositories, getIssuesClosed, getIssuesOpen } from './Github.api';
 
 const findRep = async (organizacao, repositorio) => {
   const jsonObject = await getRepositories(organizacao, repositorio);
@@ -18,24 +18,39 @@ const findRep = async (organizacao, repositorio) => {
   Alert.alert(`Erro ao buscar o repositório ${jsonObject.msg}`);
   return null;
 };
-
+const mapListResponse = (object = []) => {
+  const list = object.issues.map((item) => {
+    const {
+      id, title, user, html_url: urlIssue, state: status
+    } = item;
+    const { avatar_url: avatarUsuario, login } = user;
+    return {
+      id, titulo: title, urlIssue, avatarUsuario, loginUsuario: login, status
+    };
+  });
+  return list;
+};
 const findIssues = async (organizacao, repositorio) => {
-  const jsonObject = await getIssues(organizacao, repositorio);
-  const { success } = jsonObject;
-  if (success) {
-    const list = jsonObject.issues.map((item) => {
-      const {
-        id, title, user, html_url: urlIssue, state: status
-      } = item;
-      const { avatar_url: avatarUsuario, login } = user;
-      return {
-        id, titulo: title, urlIssue, avatarUsuario, loginUsuario: login, status
-      };
-    });
-    return list;
+  try {
+    const jsonObjectOpen = await getIssuesOpen(organizacao, repositorio);
+    const jsonObjectClosed = await getIssuesClosed(organizacao, repositorio);
+
+    let listOpen = [];
+    let listClosed = [];
+
+    const { success: successOpen } = jsonObjectOpen;
+    const { success: successClosed } = jsonObjectClosed;
+    if (successOpen) {
+      listOpen = mapListResponse(jsonObjectOpen);
+    }
+    if (successClosed) {
+      listClosed = mapListResponse(jsonObjectClosed);
+    }
+    return [...listOpen, ...listClosed];
+  } catch (error) {
+    Alert.alert(`Erro ao buscar as issues  abertas e fechadas de ${repositorio}`);
+    return null;
   }
-  Alert.alert(`Erro ao buscar as issues de ${repositorio}`);
-  return null;
 };
 
 export { findRep, findIssues };

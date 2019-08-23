@@ -1,16 +1,25 @@
-import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, SafeAreaView, Alert } from 'react-native';
+import styles from './Detail.style';
+import Issues from '../../components/IssuesList/IssueList';
+import { findIssues } from '../../services/Github.service';
+
 
 const Detail = (props) => {
+  const [list, setList] = useState([]);
   useEffect(() => {
-    const titulo = props.navigation.getParam('titulo');
-    Detail.navigationOptions = { title: t };
+    const t = props.navigation.getParam('titulo');
+    findIssues('facebook', 'react-native').then((l) => {
+      setList(l);
+    }).catch((e) => {
+      Alert.alert('Erro', `Erro ao tentar exibir lista de issues ${e}`);
+    });
   }, []);
-  const t = props.navigation.getParam('titulo');
+
   return (
-    <SafeAreaView>
-      <View>
-        <Text>{t}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.mainContainer}>
+        <Issues listIssues={list} />
       </View>
     </SafeAreaView>
   );

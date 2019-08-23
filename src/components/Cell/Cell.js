@@ -7,11 +7,14 @@ import styles from './Cell.styles';
 import { setaNavegacao } from '../temp';
 
 const Cell = ({
-  urlImageAvatar, title, subtitle, onPress
+  urlImageAvatar, title, subtitle, onPress, roundAvatar
 }) => (
   <TouchableOpacity onPress={onPress} style={styles.cell}>
     <View style={styles.avatarContainer}>
-      <Image style={styles.avatar} source={{ uri: urlImageAvatar }} />
+      <Image
+        style={(roundAvatar) ? styles.avatarRound : styles.avatar}
+        source={{ uri: urlImageAvatar }}
+      />
     </View>
     <View style={styles.containerText}>
       <Text style={styles.textTitle} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
@@ -28,6 +31,7 @@ Cell.prototype = {
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
+  roundAvatar: PropTypes.bool.isRequired
 };
 
 export default Cell;

@@ -4,7 +4,7 @@ import {
 
 export default StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'red',
+    backgroundColor: '#fff',
     flexDirection: 'row'
   },
   inputContainer: {

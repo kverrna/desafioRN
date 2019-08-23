@@ -7,7 +7,6 @@ import Cell from '../../components/Cell/Cell';
 import Search from '../../components/Search/Search';
 import { getAllReps } from '../../util/Persist';
 
-
 const Home = (props) => {
   const [listRepositories, setListRep] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,13 +33,20 @@ const Home = (props) => {
         title={organizacao}
         subtitle={nome}
         onPress={() => props.navigation.navigate('Detail')}
+        roundAvatar={false}
       />
     );
   };
 
   const flatListKeyExtractor = (item) => toString(item.id);
   const renderFlatList = (repList) => (
-    <FlatList data={repList} renderItem={renderFlatListItem} keyExtractor={flatListKeyExtractor} refreshing={refreshing} onRefresh={onRefresh} />
+    <FlatList
+      data={repList}
+      renderItem={renderFlatListItem}
+      keyExtractor={flatListKeyExtractor}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
   );
 
   return (
