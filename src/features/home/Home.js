@@ -10,14 +10,22 @@ import { getAllReps } from '../../util/Persist';
 
 const Home = (props) => {
   const [listRepositories, setListRep] = useState([]);
-  useEffect(async () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const allReps = () => {
     getAllReps().then((list) => {
       setListRep(list);
     }).catch((error) => {
       Alert.alert('Erro', error);
     });
+  };
+  useEffect(async () => {
+    allReps();
   }, []);
 
+  const onRefresh = () => {
+    setRefreshing(false);
+    allReps();
+  };
   const renderFlatListItem = ({ item }) => {
     const { avatar, organizacao, nome } = item;
     return (
@@ -32,7 +40,7 @@ const Home = (props) => {
 
   const flatListKeyExtractor = (item) => toString(item.id);
   const renderFlatList = (repList) => (
-    <FlatList data={repList} renderItem={renderFlatListItem} keyExtractor={flatListKeyExtractor} />
+    <FlatList data={repList} renderItem={renderFlatListItem} keyExtractor={flatListKeyExtractor} refreshing={refreshing} onRefresh={onRefresh} />
   );
 
   return (
