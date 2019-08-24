@@ -9,14 +9,14 @@ import { setaNavegacao } from '../temp';
 
 
 const Cell = ({
-  urlImageAvatar, title, subtitle, roundAvatar, navigation
+  urlImageAvatar, title, subtitle, roundAvatar, navigation, onPress
 }) => {
   const navegarParaDetalhe = () => {
     navigation.navigate('Detail');
   };
 
   return (
-    <TouchableOpacity onPress={navegarParaDetalhe} style={styles.cell}>
+    <TouchableOpacity onPress={(onPress) || navegarParaDetalhe} style={styles.cell}>
       <View style={styles.avatarContainer}>
         <Image
           style={(roundAvatar) ? styles.avatarRound : styles.avatar}

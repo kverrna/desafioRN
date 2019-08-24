@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  View, TouchableOpacity, Text, FlatList
+  View, TouchableOpacity, Text, FlatList, Linking
 } from 'react-native';
 import PropTypes from 'prop-types';
 import styles from './IssueList.style';
@@ -42,7 +42,9 @@ const IssueList = ({ listIssues }) => {
         urlImageAvatar={avatarUsuario}
         title={titulo}
         subtitle={loginUsuario}
-        onPress={() => {}}
+        onPress={() => {
+          Linking.openURL(urlIssue);
+        }}
         roundAvatar
       />
     );
@@ -66,7 +68,12 @@ const IssueList = ({ listIssues }) => {
     </View>
   );
 };
-IssueList.prototype = {
-  listIssues: PropTypes.array.isRequired
+IssueList.propTypes = {
+  listIssues: PropTypes.arrayOf({
+    avatarUsuario: PropTypes.string,
+    titulo: PropTypes.string,
+    loginUsuario: PropTypes.string,
+    urlIssue: PropTypes.string,
+  }).isRequired,
 };
 export default IssueList;

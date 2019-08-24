@@ -32,7 +32,6 @@ const Home = (props) => {
         urlImageAvatar={avatar}
         title={organizacao}
         subtitle={nome}
-        onPress={() => props.navigation.navigate('Detail')}
         roundAvatar={false}
       />
     );
