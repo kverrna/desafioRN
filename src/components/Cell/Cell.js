@@ -12,7 +12,7 @@ const Cell = ({
   urlImageAvatar, title, subtitle, roundAvatar, navigation, onPress
 }) => {
   const navegarParaDetalhe = () => {
-    navigation.navigate('Detail');
+    navigation.navigate('Detail', { respositorio: { organizacao: title, repositorioNome: subtitle } });
   };
 
   return (

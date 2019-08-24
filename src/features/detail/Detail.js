@@ -8,8 +8,9 @@ import { findIssues } from '../../services/Github.service';
 const Detail = (props) => {
   const [list, setList] = useState([]);
   useEffect(() => {
-    const t = props.navigation.getParam('titulo');
-    findIssues('facebook', 'react-native').then((l) => {
+    const { organizacao, repositorioNome } = props.navigation.getParam('respositorio');
+
+    findIssues(organizacao, repositorioNome).then((l) => {
       setList(l);
     }).catch((e) => {
       Alert.alert('Erro', `Erro ao tentar exibir lista de issues ${e}`);
