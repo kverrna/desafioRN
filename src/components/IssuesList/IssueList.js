@@ -1,31 +1,34 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
   View, TouchableOpacity, Text, FlatList, Linking
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
 import styles from './IssueList.style';
 import Cell from '../Cell/Cell';
 
 const IssueList = ({ listIssues }) => {
   const [current, setCurrent] = useState(0);
-  const [list, setList] = useState(listIssues);
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'TODAS': return listIssues.filter((i) => i.status);
+      case 'ABERTAS': return listIssues.filter((i) => i.status === 'open');
+      case 'FECHADAS': return listIssues.filter((i) => i.status === 'closed');
+      default: return state;
+    }
+  };
+
+  const [list, dispatch] = useReducer(reducer, listIssues);
 
   useEffect(() => {
-    switch (current) {
-      case 0: setList(listIssues.filter((i) => i.status)); break;
-      case 1: setList(listIssues.filter((i) => i.status === 'open')); break;
-      case 2: setList(listIssues.filter((i) => i.status === 'closed')); break;
-      default: setList(listIssues); break;
-    }
-  }, []);
-  const btnOnPress = (currentNumber) => {
-    setCurrent(currentNumber);
-  };
+    dispatch({ type: 'TODAS' });
+  }, [listIssues]);
+
   const renderBtn = (currentNumber, title, filterAction) => (
     <TouchableOpacity
       style={styles.btnContainer}
-      onPress={() => { btnOnPress(currentNumber); filterAction(); }}
+      onPress={() => { setCurrent(currentNumber); filterAction(); }}
     >
       <Text style={(current === currentNumber) ? styles.btnText : styles.btnTextDissmis}>
         {title}
@@ -58,9 +61,10 @@ const IssueList = ({ listIssues }) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.controlContainer}>
-        {renderBtn(0, 'Todas', () => setList(listIssues.filter((i) => i.status)))}
-        {renderBtn(1, 'Abertas', () => setList(listIssues.filter((i) => i.status === 'open')))}
-        {renderBtn(2, 'Fechadas', () => setList(listIssues.filter((i) => i.status === 'closed')))}
+        {renderBtn(0, 'Todas', () => { dispatch({ type: 'TODAS' }); })}
+        {renderBtn(1, 'Abertas', () => { dispatch({ type: 'ABERTAS' }); })}
+        {renderBtn(2, 'Fechadas', () => { dispatch({ type: 'FECHADAS' }); })}
+
       </View>
       <View style={styles.listContainer}>
         {renderFlatList(list)}
@@ -76,4 +80,4 @@ IssueList.propTypes = {
     urlIssue: PropTypes.string,
   }).isRequired,
 };
-export default IssueList;
+export default withNavigation(IssueList);
